@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Outfit", sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    background-color: rgb(161, 8, 38);
+    border-bottom: 5px solid rgb(129, 6, 30);
+    padding: 20px 20px;
+    padding-right: 40px;
+}
+
+.logo {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.5rem;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.main-content {
+    display: flex;
+    gap: 30px;
+    padding: 30px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.center-content {
+    flex: 1.5;
+    min-width: 400px;
+}
+
+.team-list {
+    flex: 1;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.team-list h3 {
+    margin-top: 0;
+    color: rgb(161, 8, 38);
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.team-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.team-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgb(161, 8, 38);
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.circle:hover {
+    background-color: rgb(161, 8, 38);
+}
+
+.calendar-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: rgb(161, 8, 38);
+    flex-grow: 1;
+    text-align: center;
+}
+
+.nav-btn {
+    background-color: rgb(161, 8, 38);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.nav-btn:hover {
+    background-color: rgb(129, 6, 30);
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.weekday {
+    text-align: center;
+    font-weight: bold;
+    color: rgb(161, 8, 38);
+    padding: 10px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background-color: #f0f0f0;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+    background-color: #fafafa;
+}
+
+.calendar-day.today {
+    background-color: rgb(161, 8, 38);
+    color: white;
+}
+
+.calendar-day.has-event {
+    border: 2px solid rgb(161, 8, 38);
+}
+
+.events-container {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.events-container h3 {
+    margin-top: 0;
+    color: rgb(161, 8, 38);
+}
+
+#eventInput,
+#eventDate {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: "Outfit", sans-serif;
+    box-sizing: border-box;
+}
+
+#addEventBtn {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(161, 8, 38);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: "Outfit", sans-serif;
+}
+
+#addEventBtn:hover {
+    background-color: rgb(129, 6, 30);
+}
+
+.events-list {
+    margin-top: 20px;
+}
+
+.event-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border-left: 4px solid rgb(161, 8, 38);
+}
+
+.event-item span {
+    flex-grow: 1;
+}
+
+.event-item button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.event-item button:hover {
+    background-color: #c0392b;
+}
