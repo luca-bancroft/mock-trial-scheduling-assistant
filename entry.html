@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Make Entry - Mock Trial Scheduling Assistant</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <img src="images/logo.png" alt="UT Logo" class="logo" >
+        <h1>Mock Trial Scheduling Assistant</h1>
+        <a href="index.html">Home</a>
+    </div>
+
+    <div class="entry-page-container">
+        <div class="entry-form">
+            <h2>Enter Scores</h2>
+            
+            <form id="scoresForm">
+                <div class="form-group">
+                    <label for="personName">Person's Name</label>
+                    <input type="text" id="personName" name="personName" placeholder="Enter full name" required>
+                </div>
+
+                <fieldset class="score-fieldset">
+                    <legend>Attorney Scores</legend>
+                    
+                    <div class="form-group">
+                        <label for="attorneyOpening">Opening/Closing Argument Score</label>
+                        <input type="number" id="attorneyOpening" name="attorneyOpening" min="0" max="10" placeholder="0-10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attorneyDirectExam">Direct Examination Score</label>
+                        <input type="number" id="attorneyDirectExam" name="attorneyDirectExam" min="0" max="10" placeholder="0-10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attorneyCrossExam">Cross Examination Score</label>
+                        <input type="number" id="attorneyCrossExam" name="attorneyCrossExam" min="0" max="10" placeholder="0-10" required>
+                    </div>
+                </fieldset>
+
+                <fieldset class="score-fieldset">
+                    <legend>Witness Scores</legend>
+                    
+                    <div class="form-group">
+                        <label for="witnessDirectExam">Direct Examination Score</label>
+                        <input type="number" id="witnessDirectExam" name="witnessDirectExam" min="0" max="10" placeholder="0-10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witnessCrossExam">Cross Examination Score</label>
+                        <input type="number" id="witnessCrossExam" name="witnessCrossExam" min="0" max="10" placeholder="0-10" required>
+                    </div>
+                </fieldset>
+
+                <button type="submit" class="submit-btn">Submit Entry</button>
+            </form>
+        </div>
+
+        <div class="entries-list-container">
+            <h2>Submitted Entries</h2>
+            <div id="entriesList" class="entries-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'mockTrialEntries';
+        let editingId = null;
+
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            return entries;
+        }
+
+        function saveEntries(entries) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+        }
+
+        function generateId() {
+            return Date.now().toString();
+        }
+
+        function displayEntries() {
+            const entries = loadEntries();
+            const entriesDiv = document.getElementById('entriesList');
+            
+            if (entries.length === 0) {
+                entriesDiv.innerHTML = '<p class="no-entries">No entries yet. Submit a form to get started!</p>';
+                return;
+            }
+
+            entriesDiv.innerHTML = entries.map((entry, index) => `
+                <div class="entry-item">
+                    <div class="entry-content">
+                        <h3>${entry.name}</h3>
+                        <div class="entry-scores">
+                            <div class="score-section">
+                                <h4>Attorney</h4>
+                                <p>Opening/Closing: <strong>${entry.attorney.openingClosing}/10</strong></p>
+                                <p>Direct Exam: <strong>${entry.attorney.directExamination}/10</strong></p>
+                                <p>Cross Exam: <strong>${entry.attorney.crossExamination}/10</strong></p>
+                            </div>
+                            <div class="score-section">
+                                <h4>Witness</h4>
+                                <p>Direct Exam: <strong>${entry.witness.directExamination}/10</strong></p>
+                                <p>Cross Exam: <strong>${entry.witness.crossExamination}/10</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry-actions">
+                        <button class="edit-btn" onclick="editEntry(${index})"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" onclick="deleteEntry(${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function submitEntry(e) {
+            e.preventDefault();
+            
+            const formData = {
+                id: editingId || generateId(),
+                name: document.getElementById('personName').value,
+                attorney: {
+                    openingClosing: document.getElementById('attorneyOpening').value,
+                    directExamination: document.getElementById('attorneyDirectExam').value,
+                    crossExamination: document.getElementById('attorneyCrossExam').value
+                },
+                witness: {
+                    directExamination: document.getElementById('witnessDirectExam').value,
+                    crossExamination: document.getElementById('witnessCrossExam').value
+                }
+            };
+            
+            let entries = loadEntries();
+            
+            if (editingId) {
+                const index = entries.findIndex(e => e.id === editingId);
+                if (index > -1) {
+                    entries[index] = formData;
+                }
+                editingId = null;
+                document.querySelector('.submit-btn').textContent = 'Submit Entry';
+            } else {
+                entries.push(formData);
+            }
+            
+            saveEntries(entries);
+            displayEntries();
+            document.getElementById('scoresForm').reset();
+        }
+
+        function editEntry(index) {
+            const entries = loadEntries();
+            const entry = entries[index];
+            
+            editingId = entry.id;
+            document.getElementById('personName').value = entry.name;
+            document.getElementById('attorneyOpening').value = entry.attorney.openingClosing;
+            document.getElementById('attorneyDirectExam').value = entry.attorney.directExamination;
+            document.getElementById('attorneyCrossExam').value = entry.attorney.crossExamination;
+            document.getElementById('witnessDirectExam').value = entry.witness.directExamination;
+            document.getElementById('witnessCrossExam').value = entry.witness.crossExamination;
+            
+            document.querySelector('.submit-btn').textContent = 'Update Entry';
+            document.querySelector('.entry-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteEntry(index) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                let entries = loadEntries();
+                entries.splice(index, 1);
+                saveEntries(entries);
+                displayEntries();
+            }
+        }
+
+        document.getElementById('scoresForm').addEventListener('submit', submitEntry);
+        displayEntries();
+    </script>
+</body>
+</html>
