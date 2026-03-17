@@ -2,7 +2,7 @@ function buildTeams() {
     const entries = JSON.parse(localStorage.getItem('mockTrialEntries')) || [];
 
     if (entries.length < 6) {
-        alert("Not enough players to build teams.");
+        alert("At least 6 players are required.");
         return;
     }
 
@@ -17,6 +17,7 @@ function buildTeams() {
             (parseFloat(player.witness.crossExamination) * 1);
 
         return {
+            id: player.id,
             name: player.name,
             attorneyScore,
             witnessScore,
@@ -24,8 +25,6 @@ function buildTeams() {
         };
     });
 
-    const sortedAttorneys = [...players].sort((a, b) => b.attorneyScore - a.attorneyScore);
-    const sortedWitnesses = [...players].sort((a, b) => b.witnessScore - a.witnessScore);
     const sortedOverall = [...players].sort((a, b) => b.totalScore - a.totalScore);
 
     let teamA = [];
@@ -33,39 +32,49 @@ function buildTeams() {
 
     const usedPlayers = new Set();
 
-    function draftRole(sortedList, count, team, role) {
-        for (let player of sortedList) {
-            if (team.filter(p => p.role === role).length >= count) break;
+    if (players.length >= 6 && players.length < 12) {
 
-            if (!usedPlayers.has(player.name)) {
-                team.push({ ...player, role });
-                usedPlayers.add(player.name);
-            }
-        }
-    }
-
-    // Draft Attorneys
-    draftRole(sortedAttorneys, 3, teamA, "Attorney");
-    draftRole(sortedAttorneys, 6, teamB, "Attorney");
-
-    // Draft Witnesses
-    draftRole(sortedWitnesses, 3, teamA, "Witness");
-    draftRole(sortedWitnesses, 6, teamB, "Witness");
-
-    // Fill remaining slots to 10
-    function fillTeam(team) {
         for (let player of sortedOverall) {
-            if (team.length >= 10) break;
+            if (teamA.length >= Math.min(players.length, 10)) break;
 
-            if (!usedPlayers.has(player.name)) {
-                team.push({ ...player, role: "Flex" });
-                usedPlayers.add(player.name);
+            teamA.push({ ...player, role: "Player" });
+            usedPlayers.add(player.id);
+        }
+
+    }
+
+    else if (players.length >= 12) {
+
+        for (let player of sortedOverall) {
+
+            if (teamA.length < 6) {
+                teamA.push({ ...player, role: "Player" });
+                usedPlayers.add(player.id);
+            }
+
+            else if (teamB.length < 6) {
+                teamB.push({ ...player, role: "Player" });
+                usedPlayers.add(player.id);
+            }
+
+            if (teamA.length === 6 && teamB.length === 6) break;
+        }
+
+        for (let player of sortedOverall) {
+
+            if (usedPlayers.has(player.id)) continue;
+
+            if (teamA.length < 10) {
+                teamA.push({ ...player, role: "Player" });
+                usedPlayers.add(player.id);
+            }
+
+            else if (teamB.length < 10) {
+                teamB.push({ ...player, role: "Player" });
+                usedPlayers.add(player.id);
             }
         }
     }
-
-    fillTeam(teamA);
-    fillTeam(teamB);
 
     renderTeams(teamA, teamB);
 }
@@ -74,7 +83,6 @@ function renderTeams(teamA, teamB) {
     const teamASlots = document.querySelectorAll(".team-a .team-item");
     const teamBSlots = document.querySelectorAll(".team-b .team-item");
 
-    // Clear slots
     teamASlots.forEach(slot => {
         slot.innerHTML = '<span class="circle"></span>';
     });
