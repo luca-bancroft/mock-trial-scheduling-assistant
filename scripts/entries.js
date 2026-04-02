@@ -67,7 +67,7 @@ function displayEntries() {
             <h3>${entry.name}</h3>
                     
             <div class="player-role ${entry.role}">
-                ${entry.role === 'flex' ? 'Attorney/Witness' : entry.role}
+                ${entry.role === 'flex' ? 'attorney/witness' : entry.role}
             </div>
 
             <div class="entry-scores">
